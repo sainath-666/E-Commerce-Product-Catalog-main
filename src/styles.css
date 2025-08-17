@@ -1,1 +1,59 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+  color: #22223b;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+a {
+  color: #3f51b5;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: #1a237e;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(60, 72, 88, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 24px rgba(60, 72, 88, 0.16);
+}
+
+.btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #6366f1 0%, #3b82f6 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(60, 72, 88, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+  box-shadow: 0 2px 8px rgba(60, 72, 88, 0.16);
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 1rem 0.5rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+}

@@ -106,6 +106,10 @@ export class CartListComponent implements OnInit {
     });
   }
 
+  getTotalItems(): number {
+    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  }
+
   decrementQuantity(cartItemId: number): void {
     const item = this.cartItems.find((i) => i.cartItemId === cartItemId);
     if (!item) {

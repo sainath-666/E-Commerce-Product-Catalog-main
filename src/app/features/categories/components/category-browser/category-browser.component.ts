@@ -3,42 +3,98 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Category } from '../../../../core/models/category.model';
 import { CategoryService } from '../../../../core/services/category.service';
+import { ProductService } from '../../../../core/services/product.service';
+import { Product } from '../../../../core/models/product.model';
 
 @Component({
   selector: 'app-category-browser',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule],
   template: `
-    <div class="container mt-4">
-      <div class="category-browser mx-auto">
-        <div class="card">
-          <div class="card-header bg-primary text-white">
-            <h5 class="card-title mb-0">Browse Categories</h5>
+    <div class="category-page split-layout">
+      <div class="category-left">
+        <div class="category-header">
+          <h2><span class="material-icons">category</span> Categories</h2>
+          <p class="subtitle">Explore our product categories below</p>
+        </div>
+        <div class="category-content">
+          <div *ngIf="loading" class="loading-state">
+            <span class="material-icons spin">autorenew</span>
+            <span>Loading categories...</span>
           </div>
-          <div class="card-body p-0">
-            <!-- Loading State -->
-            <div *ngIf="loading" class="p-4 text-center">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+          <div *ngIf="error" class="error-state">
+            <span class="material-icons">error_outline</span>
+            <span>{{ error }}</span>
+            <button class="retry-btn" (click)="loadCategories()">
+              Try Again
+            </button>
+          </div>
+          <div *ngIf="!loading && !error">
+            <ng-container *ngIf="categories.length > 0; else noCategories">
+              <ul class="category-list">
+                <ng-container
+                  *ngTemplateOutlet="
+                    categoryTree;
+                    context: { $implicit: categories }
+                  "
+                ></ng-container>
+              </ul>
+            </ng-container>
+            <ng-template #noCategories>
+              <div class="empty-state">
+                <span class="material-icons">search_off</span>
+                <span>No categories found.</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="category-right">
+        <div *ngIf="selectedCategory" class="products-section">
+          <h3>Products in {{ selectedCategory.categoryName }}</h3>
+          <div *ngIf="productsLoading" class="loading-state">
+            <span class="material-icons spin">autorenew</span>
+            <span>Loading products...</span>
+          </div>
+          <div *ngIf="productsError" class="error-state">
+            <span class="material-icons">error_outline</span>
+            <span>{{ productsError }}</span>
+          </div>
+          <div *ngIf="!productsLoading && !productsError">
+            <div *ngIf="products.length > 0; else noProducts">
+              <div class="products-list">
+                <div *ngFor="let product of products" class="product-card">
+                  <img
+                    [src]="
+                      product.imageUrl ||
+                      'https://via.placeholder.com/100x100?text=No+Image'
+                    "
+                    alt="{{ product.productName }}"
+                    class="product-image"
+                  />
+                  <div class="product-info">
+                    <h4>{{ product.productName }}</h4>
+                    <p>{{ product.description }}</p>
+                    <div class="product-meta">
+                      <span class="price">&#36;{{ product.price }}</span>
+                      <span
+                        class="stock"
+                        [class.out-of-stock]="product.stock === 0"
+                        >{{
+                          product.stock > 0 ? 'In Stock' : 'Out of Stock'
+                        }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <!-- Error State -->
-            <div *ngIf="error" class="p-3 text-center text-danger">
-              {{ error }}
-              <button class="btn btn-link" (click)="loadCategories()">Try Again</button>
-            </div>
-
-            <!-- Content -->
-            <div class="list-group list-group-flush" *ngIf="!loading && !error">
-              <ng-container *ngIf="categories.length > 0">
-                <ng-container *ngTemplateOutlet="categoryTree; context: { $implicit: categories }">
-                </ng-container>
-              </ng-container>
-              <div *ngIf="categories.length === 0" class="p-3 text-center text-muted">
-                No categories found.
+            <ng-template #noProducts>
+              <div class="empty-state">
+                <span class="material-icons">inventory_2</span>
+                <span>No products found in this category.</span>
               </div>
-            </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -46,74 +102,67 @@ import { CategoryService } from '../../../../core/services/category.service';
 
     <ng-template #categoryTree let-categories>
       <ng-container *ngFor="let category of categories">
-        <a [routerLink]="['/products']" 
-           [queryParams]="{ categoryId: category.categoryId }"
-           class="list-group-item list-group-item-action"
-           [routerLinkActiveOptions]="{exact: true}"
-           routerLinkActive="active"
-           [class.has-children]="category.subCategories?.length">
-          <div class="d-flex justify-content-between align-items-center">
-            <span>{{ category.categoryName }}</span>
-            <span *ngIf="category.subCategories?.length" 
-                  class="badge bg-secondary rounded-pill">
+        <li
+          class="category-item"
+          [class.has-children]="category.subCategories?.length"
+          [class.selected]="
+            selectedCategory?.categoryId === category.categoryId
+          "
+        >
+          <a href="#" (click)="onCategoryClick(category, $event)">
+            <span class="category-icon material-icons">folder</span>
+            <span class="category-name">{{ category.categoryName }}</span>
+            <span *ngIf="category.subCategories?.length" class="category-badge">
               {{ category.subCategories.length }}
             </span>
-          </div>
-        </a>
-        <div class="ms-3" *ngIf="category.subCategories?.length">
-          <ng-container *ngTemplateOutlet="categoryTree; context: { $implicit: category.subCategories }">
-          </ng-container>
-        </div>
+          </a>
+          <ul *ngIf="category.subCategories?.length" class="subcategory-list">
+            <ng-container
+              *ngTemplateOutlet="
+                categoryTree;
+                context: { $implicit: category.subCategories }
+              "
+            ></ng-container>
+          </ul>
+        </li>
       </ng-container>
     </ng-template>
   `,
-  styles: [`
-    .category-browser {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .list-group-item {
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
-      transition: all 0.2s ease;
-    }
-
-    .list-group-item:first-child {
-      border-top: none;
-    }
-
-    .list-group-item:hover {
-      background-color: #f8f9fa;
-      color: #0d6efd;
-    }
-
-    .list-group-item.active {
-      background-color: #e9ecef;
-      color: #0d6efd;
-      border-color: rgba(0,0,0,.125);
-    }
-
-    .has-children {
-      font-weight: 500;
-    }
-
-    .badge {
-      transition: background-color 0.2s ease;
-    }
-
-    .list-group-item:hover .badge {
-      background-color: #0d6efd !important;
-    }
-  `]
+  styleUrls: ['./category-browser.component.css'],
 })
 export class CategoryBrowserComponent implements OnInit {
+  onCategoryClick(category: Category, event: Event): void {
+    event.preventDefault();
+    if (this.selectedCategory?.categoryId === category.categoryId) return;
+    this.selectedCategory = category;
+    this.products = [];
+    this.productsError = null;
+    this.productsLoading = true;
+    this.productService.getProducts(1, 20, category.categoryId).subscribe({
+      next: (result) => {
+        this.products = result.items || [];
+        this.productsLoading = false;
+      },
+      error: (err) => {
+        this.productsError = 'Failed to load products. Please try again.';
+        this.products = [];
+        this.productsLoading = false;
+      },
+    });
+  }
   categories: Category[] = [];
   loading: boolean = false;
   error: string | null = null;
 
-  constructor(private categoryService: CategoryService) {}
+  selectedCategory: Category | null = null;
+  products: Product[] = [];
+  productsLoading: boolean = false;
+  productsError: string | null = null;
+
+  constructor(
+    private categoryService: CategoryService,
+    private productService: ProductService
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -122,19 +171,18 @@ export class CategoryBrowserComponent implements OnInit {
   loadCategories(): void {
     this.loading = true;
     this.error = null;
-    
+    this.selectedCategory = null;
+    this.products = [];
     this.categoryService.getCategories().subscribe({
       next: (categories) => {
-        console.log('Categories loaded in browser:', categories);
         this.categories = categories || [];
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading categories:', error);
         this.error = 'Failed to load categories. Please try again.';
         this.categories = [];
         this.loading = false;
-      }
+      },
     });
   }
 }

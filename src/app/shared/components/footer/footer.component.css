@@ -4,12 +4,25 @@ footer {
   margin-top: auto;
   font-size: 0.875rem;
 }
-
-h5 {
-  color: white;
-  font-size: 0.9rem;
-  margin-bottom: 0.35rem;
-  font-weight: 500;
+footer.footer {
+  background: #f8fafc;
+  color: #6366f1;
+  text-align: center;
+  padding: 1.5rem 0 1rem 0;
+  box-shadow: 0 -2px 8px rgba(60, 72, 88, 0.08);
+}
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+@media (max-width: 768px) {
+  .footer-content {
+    padding: 0 0.5rem;
+  }
 }
 
 a {
