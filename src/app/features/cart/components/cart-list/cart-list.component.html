@@ -1,0 +1,112 @@
+<div class="container my-5">
+  <h2 class="mb-4">Shopping Cart</h2>
+
+  <div *ngIf="loading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading">
+    <div *ngIf="cartItems.length === 0" class="text-center">
+      <p class="lead">Your cart is empty</p>
+      <a routerLink="/products" class="btn btn-primary">Continue Shopping</a>
+    </div>
+
+    <div *ngIf="cartItems.length > 0">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of cartItems">
+              <td>
+                <div class="d-flex align-items-center">
+                  <img
+                    [src]="
+                      item.product?.imageUrl
+                        ? item.product.imageUrl.startsWith('http')
+                          ? item.product.imageUrl
+                          : 'https://localhost:7094' + item.product.imageUrl
+                        : 'https://placehold.co/100x100/png?text=No+Image'
+                    "
+                    [alt]="item.product?.productName"
+                    class="product-thumbnail me-3"
+                    style="width: 100px; height: 100px; object-fit: cover"
+                  />
+                  <div>
+                    <a
+                      [routerLink]="['/products', item.productId]"
+                      class="text-decoration-none"
+                    >
+                      {{ item.product?.productName || "Loading..." }}
+                    </a>
+                  </div>
+                </div>
+              </td>
+              <td>${{ item.product?.price || 0 }}</td>
+              <td>
+                <div class="input-group" style="width: 120px">
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                    (click)="decrementQuantity(item.cartItemId)"
+                    [disabled]="loading || item.quantity <= 1"
+                  >
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  <div
+                    class="form-control text-center d-flex align-items-center justify-content-center"
+                  >
+                    <span *ngIf="!loading">{{ item.quantity }}</span>
+                    <div
+                      *ngIf="loading"
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                  <button
+                    class="btn btn-outline-primary"
+                    type="button"
+                    (click)="incrementQuantity(item.cartItemId)"
+                    [disabled]="loading"
+                  >
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </td>
+              <td>${{ (item.product?.price || 0) * item.quantity }}</td>
+              <td>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="removeItem(item.cartItemId)"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <button class="btn btn-outline-danger" (click)="clearCart()">
+          Clear Cart
+        </button>
+        <div class="text-end">
+          <h4>Total: ${{ calculateTotal() }}</h4>
+          <button class="btn btn-primary">Proceed to Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

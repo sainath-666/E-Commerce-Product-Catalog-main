@@ -1,0 +1,17 @@
+.product-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.quantity-controls {
+  width: 120px;
+}
+
+.quantity-controls input {
+  text-align: center;
+}
+
+td {
+  vertical-align: middle;
+}

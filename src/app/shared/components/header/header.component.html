@@ -1,0 +1,32 @@
+<header class="bg-dark text-white py-3">
+  <nav class="container navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" routerLink="/">E-Commerce Catalog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/products" routerLinkActive="active">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/categories" routerLinkActive="active">Categories</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center">
+        <a class="btn btn-outline-light position-relative" routerLink="/cart" (click)="loadCart()">
+          <i class="bi bi-cart"></i> Cart
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="cartItemCount > 0">
+            {{ cartItemCount }}
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>

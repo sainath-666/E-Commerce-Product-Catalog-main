@@ -1,0 +1,12 @@
+.product-image {
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.input-group {
+  max-width: 150px;
+}
+
+input[type="number"] {
+  text-align: center;
+}
