@@ -20,6 +20,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   ngOnInit(): void {
     this.cartSubscription = this.cartService
       .getCartItemCount()

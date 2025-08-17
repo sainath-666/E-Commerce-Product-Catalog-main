@@ -4,9 +4,15 @@
       <span class="logo-text">E-Shop</span>
     </a>
   </div>
-  <nav class="header-nav">
+  <button
+    class="menu-toggle"
+    (click)="isMenuOpen = !isMenuOpen"
+    aria-label="Toggle menu"
+  >
+    <span class="material-icons">menu</span>
+  </button>
+  <nav class="header-nav" [class.open]="isMenuOpen">
     <ul>
-      <li><button type="button" (click)="navigateTo('/')">Home</button></li>
       <li>
         <button type="button" (click)="navigateTo('/categories')">
           Categories

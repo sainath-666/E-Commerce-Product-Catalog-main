@@ -9,6 +9,7 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   padding: 2rem 2.5rem;
 }
+@media (max-width: 900px) {
 .category-left {
   flex: 0 0 320px;
   border-right: 1px solid #e9ecef;
@@ -37,6 +38,7 @@
 }
 .category-content {
   min-height: 200px;
+}
 }
 .loading-state,
 .error-state,
@@ -220,4 +222,6 @@
 .category-item.selected {
   box-shadow: 0 0 0 2px #0d6efd;
   background: #e3f0ff;
+  /* Fix for unmatched closing brace */
+
 }

@@ -21,6 +21,11 @@
   font-weight: bold;
   color: #007bff;
 }
+@media (max-width: 900px) {
+  .card-img-top {
+    height: 150px;
+  }
+}
 
 .btn-primary,
 .btn-outline-primary {

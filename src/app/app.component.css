@@ -7,3 +7,17 @@
 main {
   flex: 1;
 }
+.main-content {
+  max-width: 1200px;
+  margin: 2em auto;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(30, 54, 93, 0.08);
+  border-radius: 12px;
+  padding: 2em;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--primary-color);
+}
