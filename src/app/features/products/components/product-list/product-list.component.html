@@ -71,7 +71,7 @@
             <h5 class="card-title">{{product.productName}}</h5>
             <p class="card-text">{{product.description | slice:0:100}}...</p>
             <div class="d-flex justify-content-between align-items-center">
-              <span class="text-primary fw-bold">${{product.price}}</span>
+              <span class="text-primary fw-bold">₹{{product.price}}</span>
               <div>
                 <button class="btn btn-outline-primary me-2"
                         [routerLink]="['/products', product.productId]">
@@ -111,7 +111,7 @@
             </small>
           </div>
           <div class="col-md-4 text-end">
-            <h5 class="text-primary mb-3">${{product.price}}</h5>
+            <h5 class="text-primary mb-3">₹{{product.price}}</h5>
             <button class="btn btn-outline-primary me-2"
                     [routerLink]="['/products', product.productId]">
               View Details

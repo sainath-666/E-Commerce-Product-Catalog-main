@@ -2,7 +2,7 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink="/products">Products</a></li>
-      <li class="breadcrumb-item active">{{product.productName}}</li>
+      <li class="breadcrumb-item active">{{ product.productName }}</li>
     </ol>
   </nav>
 
@@ -10,59 +10,78 @@
     <!-- Image Section -->
     <div class="col-md-6">
       <div class="card">
-        <div id="productImageCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div
+          id="productImageCarousel"
+          class="carousel slide"
+          data-bs-ride="carousel"
+        >
           <div class="carousel-inner">
-            <div class="carousel-item" 
-                 *ngFor="let image of product.images || [product.imageUrl]; let i = index"
-                 [class.active]="i === activeImageIndex">
-              <img [src]="image || 'assets/placeholder.jpg'" 
-                   [alt]="product.productName"
-                   class="d-block w-100 product-image">
+            <div
+              class="carousel-item"
+              *ngFor="
+                let image of product.images || [product.imageUrl];
+                let i = index
+              "
+              [class.active]="i === activeImageIndex"
+            >
+              <img
+                [src]="image || 'assets/placeholder.jpg'"
+                [alt]="product.productName"
+                class="d-block w-100 product-image"
+              />
             </div>
           </div>
-          <button class="carousel-control-prev" 
-                  type="button" 
-                  data-bs-target="#productImageCarousel" 
-                  data-bs-slide="prev"
-                  *ngIf="(product.images?.length || 0) > 1">
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#productImageCarousel"
+            data-bs-slide="prev"
+            *ngIf="(product.images?.length || 0) > 1"
+          >
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
           </button>
-          <button class="carousel-control-next" 
-                  type="button" 
-                  data-bs-target="#productImageCarousel" 
-                  data-bs-slide="next"
-                  *ngIf="(product.images?.length || 0) > 1">
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#productImageCarousel"
+            data-bs-slide="next"
+            *ngIf="(product.images?.length || 0) > 1"
+          >
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
         </div>
-        
+
         <!-- Thumbnail Navigation -->
-        <div class="d-flex mt-2 gap-2 overflow-auto" *ngIf="(product.images?.length || 0) > 1">
-          <div class="thumbnail-item" 
-               *ngFor="let image of product.images; let i = index"
-               (click)="setActiveImage(i)"
-               [class.active]="i === activeImageIndex">
-            <img [src]="image || 'assets/placeholder.jpg'" 
-                 [alt]="product.productName + ' thumbnail'"
-                 class="img-thumbnail">
+        <div
+          class="d-flex mt-2 gap-2 overflow-auto"
+          *ngIf="(product.images?.length || 0) > 1"
+        >
+          <div
+            class="thumbnail-item"
+            *ngFor="let image of product.images; let i = index"
+            (click)="setActiveImage(i)"
+            [class.active]="i === activeImageIndex"
+          >
+            <img
+              [src]="image || 'assets/placeholder.jpg'"
+              [alt]="product.productName + ' thumbnail'"
+              class="img-thumbnail"
+            />
           </div>
         </div>
       </div>
 
       <!-- Social Share Buttons -->
       <div class="d-flex gap-2 mt-3">
-        <button class="btn btn-outline-primary"
-                (click)="shareOnFacebook()">
+        <button class="btn btn-outline-primary" (click)="shareOnFacebook()">
           <i class="bi bi-facebook"></i> Share
         </button>
-        <button class="btn btn-outline-info"
-                (click)="shareOnTwitter()">
+        <button class="btn btn-outline-info" (click)="shareOnTwitter()">
           <i class="bi bi-twitter"></i> Tweet
         </button>
-        <button class="btn btn-outline-secondary"
-                (click)="copyLink()">
+        <button class="btn btn-outline-secondary" (click)="copyLink()">
           <i class="bi bi-link-45deg"></i> Copy Link
         </button>
       </div>
@@ -70,43 +89,55 @@
 
     <!-- Product Details Section -->
     <div class="col-md-6">
-      <h1 class="mb-4">{{product.productName}}</h1>
-      <p class="text-muted">Product ID: {{product.productId}}</p>
-      <h2 class="text-primary mb-4">${{product.price}}</h2>
-      
+      <h1 class="mb-4">{{ product.productName }}</h1>
+      <p class="text-muted">Product ID: {{ product.productId }}</p>
+      <h2 class="text-primary mb-4">₹{{ product.price }}</h2>
+
       <div class="mb-4">
         <h4>Description</h4>
-        <p>{{product.description}}</p>
+        <p>{{ product.description }}</p>
       </div>
 
       <div class="mb-4">
         <h4>Stock Status</h4>
-        <p [class.text-success]="product.stock > 0" 
-           [class.text-danger]="product.stock === 0">
-          {{product.stock > 0 ? product.stock + ' items available' : 'Out of Stock'}}
+        <p
+          [class.text-success]="product.stock > 0"
+          [class.text-danger]="product.stock === 0"
+        >
+          {{
+            product.stock > 0
+              ? product.stock + " items available"
+              : "Out of Stock"
+          }}
         </p>
       </div>
 
       <div class="mb-4" *ngIf="product.stock > 0">
         <label>Quantity:</label>
         <div class="input-group w-50">
-          <button class="btn btn-outline-secondary" 
-                  type="button"
-                  (click)="decrementQuantity()">-</button>
-          <input type="number" 
-                 class="form-control text-center" 
-                 [(ngModel)]="quantity"
-                 [max]="product.stock"
-                 [min]="1">
-          <button class="btn btn-outline-secondary" 
-                  type="button"
-                  (click)="incrementQuantity()">+</button>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="decrementQuantity()"
+          >
+            -
+          </button>
+          <span class="form-control text-center">{{ quantity }}</span>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="incrementQuantity()"
+          >
+            +
+          </button>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-lg"
-              [disabled]="product.stock === 0"
-              (click)="addToCart()">
+      <button
+        class="btn btn-primary btn-lg"
+        [disabled]="product.stock === 0"
+        (click)="addToCart()"
+      >
         Add to Cart
       </button>
     </div>

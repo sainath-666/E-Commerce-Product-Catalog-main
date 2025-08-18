@@ -11,11 +11,11 @@ import { CartService } from '../../../../core/services/cart.service';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
+  styleUrl: './product-detail.component.css',
 })
 export class ProductDetailComponent implements OnInit {
   product: Product | null = null;
-  quantity: number = 1;
+  quantity = 1;
   activeImageIndex: number = 0;
   relatedProducts: Product[] = [];
 
@@ -26,14 +26,14 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       const id = +params['id'];
       this.loadProduct(id);
     });
   }
 
   loadProduct(id: number): void {
-    this.productService.getProduct(id).subscribe(product => {
+    this.productService.getProduct(id).subscribe((product) => {
       this.product = product;
       this.loadRelatedProducts();
     });
@@ -41,7 +41,8 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart(): void {
     if (this.product) {
-      this.cartService.addToCart(this.product.productId, this.quantity)
+      this.cartService
+        .addToCart(this.product.productId, this.quantity)
         .subscribe();
     }
   }
@@ -74,7 +75,9 @@ export class ProductDetailComponent implements OnInit {
     const url = window.location.href;
     const text = `Check out ${this.product?.productName} on our store!`;
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        text
+      )}&url=${encodeURIComponent(url)}`,
       '_blank'
     );
   }
@@ -87,9 +90,14 @@ export class ProductDetailComponent implements OnInit {
 
   private loadRelatedProducts(): void {
     if (this.product) {
-      this.productService.getProducts(1, 4, this.product.categoryId).subscribe(
-        response => this.relatedProducts = response.items.filter(p => p.productId !== this.product?.productId)
-      );
+      this.productService
+        .getProducts(1, 4, this.product.categoryId)
+        .subscribe(
+          (response) =>
+            (this.relatedProducts = response.items.filter(
+              (p) => p.productId !== this.product?.productId
+            ))
+        );
     }
   }
 }
